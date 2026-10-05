@@ -1,4 +1,4 @@
-import { memo, useMemo } from "react";
+import { useMemo } from "react";
 
 function rng(seed: number) {
   return () => {
@@ -7,13 +7,13 @@ function rng(seed: number) {
   };
 }
 
-type Stroke = { d: string; w: number; o: number; region: number; light: boolean; dash?: string };
+type Stroke = { d: string; w: number; o: number; region: number };
 
 function buildStrokes(): Stroke[] {
   const r = rng(641);
   const out: Stroke[] = [];
   const W = 1000;
-  for (let i = 0; i < 240; i++) {
+  for (let i = 0; i < 140; i++) {
     const cx = 40 + r() * 920;
     const cy = 60 + r() * 140;
     const kind = r();
@@ -47,23 +47,7 @@ function buildStrokes(): Stroke[] {
       d += ` Q${px.toFixed(1)} ${py.toFixed(1)} ${((px + x) / 2).toFixed(1)} ${((py + y) / 2).toFixed(1)}`;
     }
     const thick = r() < 0.35;
-    const light = r() < 0.18;
-    if (light) {
-      // irregular white stroke: stacked passes with varying width and broken dashes
-      for (let p = 0; p < 3; p++) {
-        out.push({
-          d,
-          w: 0.6 + r() * (p === 0 ? 7 : 3),
-          o: 0.6 + r() * 0.4,
-          region: Math.min(2, Math.floor((cx / W) * 3)),
-          light: true,
-          dash: `${(4 + r() * 40).toFixed(0)} ${(1 + r() * 8).toFixed(0)} ${(2 + r() * 20).toFixed(0)} ${(1 + r() * 5).toFixed(0)}`,
-        });
-      }
-      continue;
-    }
     out.push({
-      light: false,
       d,
       w: thick ? 4 + r() * 6 : 0.8 + r() * 2.2,
       o: r() < 0.3 ? 0.45 + r() * 0.3 : 1,
@@ -73,7 +57,7 @@ function buildStrokes(): Stroke[] {
   return out;
 }
 
-function ScribbleBase({ active }: { active: number | null }) {
+export function Scribble({ active }: { active: number | null }) {
   const strokes = useMemo(buildStrokes, []);
   return (
     <svg viewBox="0 0 1000 280" className="h-auto w-full" aria-hidden="true">
@@ -84,7 +68,6 @@ function ScribbleBase({ active }: { active: number | null }) {
             active !== null && active !== g ? "is-dim" : ""
           }`}
         >
-          <g className="scribble-drift" style={{ animationDelay: `${g * -2}s` }}>
           {strokes
             .filter((s) => s.region === g)
             .map((s, i) => (
@@ -92,19 +75,17 @@ function ScribbleBase({ active }: { active: number | null }) {
                 key={i}
                 d={s.d}
                 fill="none"
-                stroke={s.light ? "var(--scribble-light)" : "currentColor"}
-                strokeDasharray={s.dash}
+                stroke="currentColor"
                 strokeLinecap="round"
                 strokeLinejoin="round"
                 strokeWidth={s.w}
                 opacity={s.o}
-                className={s.light ? "scribble-stroke is-light" : "scribble-stroke"}
+                className="scribble-stroke"
+                style={{ animationDelay: `${(i % 7) * -0.9}s` }}
               />
             ))}
-          </g>
         </g>
       ))}
     </svg>
   );
 }
-export const Scribble = memo(ScribbleBase);
