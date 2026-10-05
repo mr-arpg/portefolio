@@ -39,10 +39,11 @@ function buildStrokes(): Stroke[] {
         pts.push([cx + Math.cos(a) * rad, cy + Math.sin(a) * rad * 0.8]);
       }
     }
-    let d = `M${pts[0][0].toFixed(1)} ${pts[0][1].toFixed(1)}`;
+    const p0 = pts[0]!;
+    let d = `M${p0[0].toFixed(1)} ${p0[1].toFixed(1)}`;
     for (let k = 1; k < pts.length; k++) {
-      const [px, py] = pts[k - 1];
-      const [x, y] = pts[k];
+      const [px, py] = pts[k - 1]!;
+      const [x, y] = pts[k]!;
       d += ` Q${px.toFixed(1)} ${py.toFixed(1)} ${((px + x) / 2).toFixed(1)} ${((py + y) / 2).toFixed(1)}`;
     }
     const thick = r() < 0.35;
