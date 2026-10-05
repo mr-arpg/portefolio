@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { memo, useMemo } from "react";
 
 function rng(seed: number) {
   return () => {
@@ -73,7 +73,7 @@ function buildStrokes(): Stroke[] {
   return out;
 }
 
-export function Scribble({ active }: { active: number | null }) {
+function ScribbleBase({ active }: { active: number | null }) {
   const strokes = useMemo(buildStrokes, []);
   return (
     <svg viewBox="0 0 1000 280" className="h-auto w-full" aria-hidden="true">
@@ -84,6 +84,7 @@ export function Scribble({ active }: { active: number | null }) {
             active !== null && active !== g ? "is-dim" : ""
           }`}
         >
+          <g className="scribble-drift" style={{ animationDelay: `${g * -2}s` }}>
           {strokes
             .filter((s) => s.region === g)
             .map((s, i) => (
@@ -98,11 +99,12 @@ export function Scribble({ active }: { active: number | null }) {
                 strokeWidth={s.w}
                 opacity={s.o}
                 className={s.light ? "scribble-stroke is-light" : "scribble-stroke"}
-                style={{ animationDelay: `${(i % 7) * -0.9}s` }}
               />
             ))}
+          </g>
         </g>
       ))}
     </svg>
   );
 }
+export const Scribble = memo(ScribbleBase);
