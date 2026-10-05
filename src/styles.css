@@ -152,7 +152,8 @@
   .scribble-group.is-active { transform: scale(1.04) translateY(-4px); }
   .scribble-group.is-active .scribble-stroke:not(.is-light) { stroke-width: calc(1px + 0.5vw); opacity: 1; }
   .scribble-group.is-dim { opacity: 0.35; }
-  .scribble-stroke { transition: stroke-width 350ms ease; animation: jitter 6s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+  .scribble-stroke { transition: stroke-width 300ms ease; }
+  .scribble-drift { animation: jitter 6s ease-in-out infinite; will-change: transform; }
   .reveal { opacity: 0; transition: opacity 300ms ease; pointer-events: none; }
   .reveal.is-visible { opacity: 1; pointer-events: auto; }
   .reveal-link { text-decoration: underline; text-underline-offset: 3px; }
@@ -166,6 +167,6 @@
   66% { transform: translate(-1px,1.5px) rotate(-0.3deg); }
 }
 @media (prefers-reduced-motion: reduce) {
-  .scribble-stroke { animation: none; }
+  .scribble-drift { animation: none; }
   .scribble-group, .reveal { transition: none; }
 }

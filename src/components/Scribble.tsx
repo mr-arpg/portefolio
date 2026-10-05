@@ -84,6 +84,7 @@ export function Scribble({ active }: { active: number | null }) {
             active !== null && active !== g ? "is-dim" : ""
           }`}
         >
+          <g className="scribble-drift" style={{ animationDelay: `${g * -2}s` }}>
           {strokes
             .filter((s) => s.region === g)
             .map((s, i) => (
@@ -98,9 +99,9 @@ export function Scribble({ active }: { active: number | null }) {
                 strokeWidth={s.w}
                 opacity={s.o}
                 className={s.light ? "scribble-stroke is-light" : "scribble-stroke"}
-                style={{ animationDelay: `${(i % 7) * -0.9}s` }}
               />
             ))}
+          </g>
         </g>
       ))}
     </svg>
