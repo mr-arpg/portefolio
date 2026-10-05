@@ -48,11 +48,7 @@ function ScreenDraw({ wipe }: { wipe: number }) {
     const ctx = canvas?.getContext("2d");
     if (!canvas || !ctx) return;
 
-    const fit = () => {
-      const dpr = Math.min(window.devicePixelRatio || 1, 2);
-      canvas.width = Math.floor(window.innerWidth * dpr);
-      canvas.height = Math.floor(window.innerHeight * dpr);
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    const ink = () => {
       const color =
         getComputedStyle(document.documentElement).getPropertyValue("--foreground").trim() || "#000";
       ctx.strokeStyle = color;
@@ -60,6 +56,26 @@ function ScreenDraw({ wipe }: { wipe: number }) {
       ctx.lineWidth = 2.5;
       ctx.lineCap = "round";
       ctx.lineJoin = "round";
+    };
+
+    const fit = () => {
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      const w = Math.floor(window.innerWidth * dpr);
+      const h = Math.floor(window.innerHeight * dpr);
+      if (canvas.width === w && canvas.height === h) {
+        ink();
+        return;
+      }
+      const prev = document.createElement("canvas");
+      prev.width = canvas.width;
+      prev.height = canvas.height;
+      if (canvas.width && canvas.height) prev.getContext("2d")?.drawImage(canvas, 0, 0);
+      canvas.width = w;
+      canvas.height = h;
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      if (prev.width && prev.height) ctx.drawImage(prev, 0, 0);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      ink();
     };
 
     fit();
@@ -74,6 +90,11 @@ function ScreenDraw({ wipe }: { wipe: number }) {
       if (e.button !== 0 || blocked(e.target)) return;
       e.preventDefault();
       drawing.current = true;
+      try {
+        document.body.setPointerCapture(e.pointerId);
+      } catch {
+        // Some mobile browsers reject capture; the window listeners still draw.
+      }
       x = e.clientX;
       y = e.clientY;
       ctx.beginPath();
@@ -82,6 +103,7 @@ function ScreenDraw({ wipe }: { wipe: number }) {
     };
     const move = (e: PointerEvent) => {
       if (!drawing.current) return;
+      if (e.cancelable) e.preventDefault();
       ctx.beginPath();
       ctx.moveTo(x, y);
       ctx.lineTo(e.clientX, e.clientY);
@@ -89,13 +111,14 @@ function ScreenDraw({ wipe }: { wipe: number }) {
       x = e.clientX;
       y = e.clientY;
     };
-    const up = () => {
+    const up = (e: PointerEvent) => {
       drawing.current = false;
+      if (document.body.hasPointerCapture(e.pointerId)) document.body.releasePointerCapture(e.pointerId);
     };
 
     window.addEventListener("resize", fit);
     window.addEventListener("pointerdown", down, { passive: false });
-    window.addEventListener("pointermove", move);
+    window.addEventListener("pointermove", move, { passive: false });
     window.addEventListener("pointerup", up);
     window.addEventListener("pointercancel", up);
     return () => {
