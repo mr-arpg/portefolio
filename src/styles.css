@@ -51,6 +51,7 @@
   --color-chart-3: var(--chart-3);
   --color-chart-4: var(--chart-4);
   --color-chart-5: var(--chart-5);
+  --font-mono: "Space Mono", ui-monospace, monospace;
   --color-sidebar: var(--sidebar);
   --color-sidebar-foreground: var(--sidebar-foreground);
   --color-sidebar-primary: var(--sidebar-primary);
@@ -63,8 +64,8 @@
 
 :root {
   --radius: 0.625rem;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.129 0.042 264.695);
+  --background: oklch(0.858 0 0);
+  --foreground: oklch(0 0 0);
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.129 0.042 264.695);
   --popover: oklch(1 0 0);
@@ -74,7 +75,7 @@
   --secondary: oklch(0.968 0.007 247.896);
   --secondary-foreground: oklch(0.208 0.042 265.755);
   --muted: oklch(0.968 0.007 247.896);
-  --muted-foreground: oklch(0.554 0.046 257.417);
+  --muted-foreground: oklch(0.55 0 0);
   --accent: oklch(0.968 0.007 247.896);
   --accent-foreground: oklch(0.208 0.042 265.755);
   --destructive: oklch(0.577 0.245 27.325);
@@ -141,4 +142,29 @@
     background-color: var(--color-background);
     color: var(--color-foreground);
   }
+}
+
+@layer components {
+  .hotspot { background: transparent; border: 0; outline: none; cursor: inherit; min-height: 4rem; }
+  .hotspot:focus-visible { outline: 1px dashed var(--foreground); outline-offset: -4px; }
+  .scribble-group { color: var(--foreground); transition: transform 350ms ease, opacity 350ms ease; transform-box: fill-box; transform-origin: center; }
+  .scribble-group.is-active { transform: scale(1.04) translateY(-4px); }
+  .scribble-group.is-active .scribble-stroke { stroke-width: calc(1px + 0.5vw); opacity: 1; }
+  .scribble-group.is-dim { opacity: 0.35; }
+  .scribble-stroke { transition: stroke-width 350ms ease; animation: jitter 6s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+  .reveal { opacity: 0; transition: opacity 300ms ease; pointer-events: none; }
+  .reveal.is-visible { opacity: 1; pointer-events: auto; }
+  .reveal-link { text-decoration: underline; text-underline-offset: 3px; }
+  .cursor-dot { position: fixed; top: 0; left: 0; width: 8px; height: 8px; border-radius: 9999px; background: var(--foreground); pointer-events: none; z-index: 50; }
+  @media (pointer: fine) { .cursor-none-fine, .cursor-none-fine * { cursor: none; } }
+  @media (pointer: coarse) { .cursor-dot { display: none; } }
+}
+@keyframes jitter {
+  0%,100% { transform: translate(0,0) rotate(0deg); }
+  33% { transform: translate(1.5px,-1px) rotate(0.4deg); }
+  66% { transform: translate(-1px,1.5px) rotate(-0.3deg); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .scribble-stroke { animation: none; }
+  .scribble-group, .reveal { transition: none; }
 }
