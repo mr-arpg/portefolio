@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Scribble } from "@/components/Scribble";
 
 export const Route = createFileRoute("/")({
@@ -42,13 +42,6 @@ function Content({ i }: { i: number }) {
 
 function Index() {
   const [active, setActive] = useState<number | null>(null);
-  const [dot, setDot] = useState<{ x: number; y: number } | null>(null);
-
-  useEffect(() => {
-    const move = (e: PointerEvent) => e.pointerType === "mouse" && setDot({ x: e.clientX, y: e.clientY });
-    window.addEventListener("pointermove", move);
-    return () => window.removeEventListener("pointermove", move);
-  }, []);
 
   return (
     <main
@@ -99,7 +92,22 @@ function Index() {
         <p>© 2026 Armando Gonçalves</p>
       </footer>
 
-      {dot && <div className="cursor-dot" style={{ transform: `translate(${dot.x - 4}px, ${dot.y - 4}px)` }} />}
+      <CursorDot />
     </main>
   );
+}
+
+function CursorDot() {
+  const ref = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const move = (e: PointerEvent) => {
+      const el = ref.current;
+      if (!el || e.pointerType !== "mouse") return;
+      el.style.opacity = "1";
+      el.style.transform = `translate(${e.clientX - 4}px, ${e.clientY - 4}px)`;
+    };
+    window.addEventListener("pointermove", move);
+    return () => window.removeEventListener("pointermove", move);
+  }, []);
+  return <div ref={ref} className="cursor-dot" style={{ opacity: 0 }} aria-hidden="true" />;
 }

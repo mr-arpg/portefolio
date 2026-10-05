@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { memo, useMemo } from "react";
 
 function rng(seed: number) {
   return () => {
@@ -73,7 +73,7 @@ function buildStrokes(): Stroke[] {
   return out;
 }
 
-export function Scribble({ active }: { active: number | null }) {
+function ScribbleBase({ active }: { active: number | null }) {
   const strokes = useMemo(buildStrokes, []);
   return (
     <svg viewBox="0 0 1000 280" className="h-auto w-full" aria-hidden="true">
@@ -107,3 +107,4 @@ export function Scribble({ active }: { active: number | null }) {
     </svg>
   );
 }
+export const Scribble = memo(ScribbleBase);
