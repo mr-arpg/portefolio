@@ -66,6 +66,7 @@
   --radius: 0.625rem;
   --background: oklch(0.858 0 0);
   --foreground: oklch(0 0 0);
+  --scribble-light: oklch(0.99 0 0);
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.129 0.042 264.695);
   --popover: oklch(1 0 0);
@@ -149,7 +150,7 @@
   .hotspot:focus-visible { outline: 1px dashed var(--foreground); outline-offset: -4px; }
   .scribble-group { color: var(--foreground); transition: transform 350ms ease, opacity 350ms ease; transform-box: fill-box; transform-origin: center; }
   .scribble-group.is-active { transform: scale(1.04) translateY(-4px); }
-  .scribble-group.is-active .scribble-stroke { stroke-width: calc(1px + 0.5vw); opacity: 1; }
+  .scribble-group.is-active .scribble-stroke:not(.is-light) { stroke-width: calc(1px + 0.5vw); opacity: 1; }
   .scribble-group.is-dim { opacity: 0.35; }
   .scribble-stroke { transition: stroke-width 350ms ease; animation: jitter 6s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
   .reveal { opacity: 0; transition: opacity 300ms ease; pointer-events: none; }

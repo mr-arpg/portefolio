@@ -7,13 +7,13 @@ function rng(seed: number) {
   };
 }
 
-type Stroke = { d: string; w: number; o: number; region: number };
+type Stroke = { d: string; w: number; o: number; region: number; light: boolean; dash?: string };
 
 function buildStrokes(): Stroke[] {
   const r = rng(641);
   const out: Stroke[] = [];
   const W = 1000;
-  for (let i = 0; i < 140; i++) {
+  for (let i = 0; i < 240; i++) {
     const cx = 40 + r() * 920;
     const cy = 60 + r() * 140;
     const kind = r();
@@ -47,7 +47,23 @@ function buildStrokes(): Stroke[] {
       d += ` Q${px.toFixed(1)} ${py.toFixed(1)} ${((px + x) / 2).toFixed(1)} ${((py + y) / 2).toFixed(1)}`;
     }
     const thick = r() < 0.35;
+    const light = r() < 0.18;
+    if (light) {
+      // irregular white stroke: stacked passes with varying width and broken dashes
+      for (let p = 0; p < 3; p++) {
+        out.push({
+          d,
+          w: 0.6 + r() * (p === 0 ? 7 : 3),
+          o: 0.6 + r() * 0.4,
+          region: Math.min(2, Math.floor((cx / W) * 3)),
+          light: true,
+          dash: `${(4 + r() * 40).toFixed(0)} ${(1 + r() * 8).toFixed(0)} ${(2 + r() * 20).toFixed(0)} ${(1 + r() * 5).toFixed(0)}`,
+        });
+      }
+      continue;
+    }
     out.push({
+      light: false,
       d,
       w: thick ? 4 + r() * 6 : 0.8 + r() * 2.2,
       o: r() < 0.3 ? 0.45 + r() * 0.3 : 1,
@@ -75,12 +91,13 @@ export function Scribble({ active }: { active: number | null }) {
                 key={i}
                 d={s.d}
                 fill="none"
-                stroke="currentColor"
+                stroke={s.light ? "var(--scribble-light)" : "currentColor"}
+                strokeDasharray={s.dash}
                 strokeLinecap="round"
                 strokeLinejoin="round"
                 strokeWidth={s.w}
                 opacity={s.o}
-                className="scribble-stroke"
+                className={s.light ? "scribble-stroke is-light" : "scribble-stroke"}
                 style={{ animationDelay: `${(i % 7) * -0.9}s` }}
               />
             ))}
