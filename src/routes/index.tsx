@@ -21,21 +21,32 @@ const copy = {
     sections: ["About", "Work", "Contact"],
     about:
       "Part engineer, part musician, part wrestler. I build websites for people who'd rather be remembered than templated.",
-    work: "Website for a music incubator at the Fábrica da Pólvora, Barcarena.",
     place: "Lisbon, Portugal · Available remotely",
     code: "EN",
     switchLabel: "English",
+    clickMe: "click me",
   },
   pt: {
     sections: ["Sobre", "Trabalho", "Contacto"],
     about:
       "Parte engenheiro, parte músico, parte lutador. Faço websites para quem prefere ser lembrado a ser um template.",
-    work: "Website para uma incubadora de música na Fábrica da Pólvora, Barcarena.",
     place: "Lisboa, Portugal · Disponível remotamente",
     code: "PT",
     switchLabel: "Português",
+    clickMe: "clica-me",
   },
 } as const;
+
+const works = [
+  { title: "Associação 641", href: "https://641.pt", label: "641.pt" },
+  { title: "Eyewitness", href: "https://arpg-eyewitness.hf.space/", label: "hf.space" },
+  { title: "Sozaia", href: "https://mr-arpg.github.io/sozaia/", label: "sozaia" },
+  { title: "Dvojeziko", href: "https://dvojeziko.vercel.app/", label: "dvojeziko" },
+  { title: "Mixtaper Concept", href: "https://mr-arpg.github.io/mixtaper/?list=PLV9OFpCeDOvk&title=Awesome+Tuga+Vibes+For+Melina+Vol.1", label: "mixtaper" },
+  { title: "Onion Tools", href: "https://mr-arpg.github.io/onion-tools/", label: "onion-tools" },
+  { title: "Parody University", href: "https://mr-arpg.github.io/tecas.pt/tecas.pt/", label: "tecas.pt" },
+  { title: "HackerSchool Recruitment", href: "https://hackerschool.github.io/HRS/", label: "HRS" },
+] as const;
 
 type Lang = keyof typeof copy;
 
@@ -151,16 +162,24 @@ function Content({ i, lang }: { i: number; lang: Lang }) {
   if (i === 1)
     return (
       <div className="space-y-1">
-        <p>Associação 641</p>
-        <p>{t.work}</p>
-        <a href="https://641.pt" target="_blank" rel="noreferrer" className="reveal-link">
-          641.pt →
-        </a>
+        {works.map((work) => (
+          <p key={work.href} className="flex flex-wrap items-baseline gap-x-2">
+            <span>{work.title}</span>
+            <a href={work.href} target="_blank" rel="noreferrer" className="reveal-link whitespace-nowrap">
+              {work.label} →
+            </a>
+          </p>
+        ))}
       </div>
     );
   return (
     <div className="space-y-1">
       <p>Armando Gonçalves</p>
+      <p>
+        <a className="reveal-link break-all" href="mailto:armandogoncalves@tecnico.ulisboa.pt">
+          armandogoncalves@tecnico.ulisboa.pt
+        </a>
+      </p>
       <p>
         <a className="reveal-link" href="tel:+351968507107">
           +351 968 507 107
@@ -194,6 +213,7 @@ function Index() {
   const [dot, setDot] = useState<{ x: number; y: number } | null>(null);
   const [lang, setLang] = useState<Lang>("en");
   const t = copy[lang];
+  const nextLang: Lang = lang === "en" ? "pt" : "en";
 
   useEffect(() => {
     const saved = localStorage.getItem("lang");
@@ -222,14 +242,13 @@ function Index() {
       <button
         type="button"
         onClick={() => {
-          const next: Lang = lang === "en" ? "pt" : "en";
-          setLang(next);
-          localStorage.setItem("lang", next);
+          setLang(nextLang);
+          localStorage.setItem("lang", nextLang);
         }}
-        aria-label={t.switchLabel}
+        aria-label={copy[nextLang].switchLabel}
         className="lang-toggle fixed top-5 right-6 z-40 border-0 bg-transparent p-0 font-mono text-base leading-none text-foreground"
       >
-        {t.code}
+        {copy[nextLang].code}
       </button>
       <div
         className="relative mx-auto pt-[8vh] w-[90vw] md:w-[66vw]"
@@ -255,7 +274,11 @@ function Index() {
               }}
               onClick={() => setActive(i)}
               className="hotspot"
-            />
+            >
+              <span className={`click-hint${active === i ? " is-off" : ""}`} aria-hidden="true">
+                {t.clickMe}
+              </span>
+            </button>
           ))}
           </div>
         </div>
@@ -265,8 +288,12 @@ function Index() {
               key={i}
               id={`panel-${i}`}
               aria-label={s}
-              className={`reveal absolute max-w-sm text-xs leading-relaxed ${
-                i === 0 ? "left-0" : i === 1 ? "left-1/2 -translate-x-1/2" : "right-0"
+              className={`reveal absolute text-xs leading-relaxed ${
+                i === 0
+                  ? "left-0 max-w-sm"
+                  : i === 1
+                    ? "left-1/2 w-max max-w-full -translate-x-1/2"
+                    : "right-0 max-w-sm"
               } ${active === i ? "is-visible" : ""}`}
             >
               <Content i={i} lang={lang} />
