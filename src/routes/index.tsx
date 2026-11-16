@@ -6,9 +6,16 @@ export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
       { title: "armando, web design" },
-      { name: "description", content: "Armando Gonçalves — web designer and developer in Lisbon. Websites for people who'd rather be remembered than templated." },
+      {
+        name: "description",
+        content:
+          "Armando Gonçalves — web designer and developer in Lisbon. Websites for people who'd rather be remembered than templated.",
+      },
       { property: "og:title", content: "armando, web design" },
-      { property: "og:description", content: "Websites for people who'd rather be remembered than templated." },
+      {
+        property: "og:description",
+        content: "Websites for people who'd rather be remembered than templated.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
     ],
@@ -41,12 +48,24 @@ const copy = {
 
 const works = [
   { title: "Associação 641", href: "https://641.pt", label: "641.pt" },
-  { title: "Eyewitness (ARTeFACTo 2026, Beja)", href: "https://arpg-eyewitness.hf.space/", label: "hf.space" },
+  {
+    title: "Eyewitness (ARTeFACTo 2026, Beja)",
+    href: "https://arpg-eyewitness.hf.space/",
+    label: "hf.space",
+  },
   { title: "Sozaia", href: "https://mr-arpg.github.io/sozaia/", label: "sozaia" },
   { title: "Dvojeziko", href: "https://dvojeziko.vercel.app/", label: "dvojeziko" },
-  { title: "Mixtaper Concept", href: "https://mr-arpg.github.io/mixtaper/?list=PLV9OFpCeDOvk&title=Awesome+Tuga+Vibes+For+Melina+Vol.1", label: "mixtaper" },
+  {
+    title: "Mixtaper Concept",
+    href: "https://mr-arpg.github.io/mixtaper/?list=PLV9OFpCeDOvk&title=Awesome+Tuga+Vibes+For+Melina+Vol.1",
+    label: "mixtaper",
+  },
   { title: "Onion Tools", href: "https://mr-arpg.github.io/onion-tools/", label: "onion-tools" },
-  { title: "Parody University", href: "https://mr-arpg.github.io/tecas.pt/tecas.pt/", label: "tecas.pt" },
+  {
+    title: "Parody University",
+    href: "https://mr-arpg.github.io/tecas.pt/tecas.pt/",
+    label: "tecas.pt",
+  },
   { title: "HackerSchool Recruitment", href: "https://hackerschool.github.io/HRS/", label: "HRS" },
 ] as const;
 
@@ -63,7 +82,8 @@ function ScreenDraw({ wipe }: { wipe: number }) {
 
     const ink = () => {
       const color =
-        getComputedStyle(document.documentElement).getPropertyValue("--foreground").trim() || "#000";
+        getComputedStyle(document.documentElement).getPropertyValue("--foreground").trim() ||
+        "#000";
       ctx.strokeStyle = color;
       ctx.fillStyle = color;
       ctx.lineWidth = 2.5;
@@ -126,7 +146,8 @@ function ScreenDraw({ wipe }: { wipe: number }) {
     };
     const up = (e: PointerEvent) => {
       drawing.current = false;
-      if (document.body.hasPointerCapture(e.pointerId)) document.body.releasePointerCapture(e.pointerId);
+      if (document.body.hasPointerCapture(e.pointerId))
+        document.body.releasePointerCapture(e.pointerId);
     };
 
     window.addEventListener("resize", fit);
@@ -164,7 +185,12 @@ function Content({ i, lang }: { i: number; lang: Lang }) {
     return (
       <p>
         {t.about}{" "}
-        <a className="reveal-link" href={`${import.meta.env.BASE_URL}cv.png`} target="_blank" rel="noreferrer">
+        <a
+          className="reveal-link"
+          href={`${import.meta.env.BASE_URL}cv.html`}
+          target="_blank"
+          rel="noreferrer"
+        >
           {t.cv} →
         </a>
       </p>
@@ -175,7 +201,12 @@ function Content({ i, lang }: { i: number; lang: Lang }) {
         {works.map((work) => (
           <p key={work.href} className="flex flex-wrap items-baseline gap-x-2">
             <span>{work.title}</span>
-            <a href={work.href} target="_blank" rel="noreferrer" className="reveal-link whitespace-nowrap">
+            <a
+              href={work.href}
+              target="_blank"
+              rel="noreferrer"
+              className="reveal-link whitespace-nowrap"
+            >
               {work.label} →
             </a>
           </p>
@@ -197,19 +228,34 @@ function Content({ i, lang }: { i: number; lang: Lang }) {
       </p>
       <p>
         Instagram:{" "}
-        <a className="reveal-link" href="https://instagram.com/dopacrusader" target="_blank" rel="noreferrer">
+        <a
+          className="reveal-link"
+          href="https://instagram.com/dopacrusader"
+          target="_blank"
+          rel="noreferrer"
+        >
           @dopacrusader
         </a>
       </p>
       <p>
         LinkedIn:{" "}
-        <a className="reveal-link" href="https://linkedin.com/in/armando-goncalves" target="_blank" rel="noreferrer">
+        <a
+          className="reveal-link"
+          href="https://linkedin.com/in/armando-goncalves"
+          target="_blank"
+          rel="noreferrer"
+        >
           armando-goncalves
         </a>
       </p>
       <p>
         GitHub:{" "}
-        <a className="reveal-link" href="https://github.com/mr-arpg" target="_blank" rel="noreferrer">
+        <a
+          className="reveal-link"
+          href="https://github.com/mr-arpg"
+          target="_blank"
+          rel="noreferrer"
+        >
           mr-arpg
         </a>
       </p>
@@ -221,6 +267,7 @@ function Index() {
   const [active, setActive] = useState<number | null>(null);
   const [wipe, setWipe] = useState(0);
   const [dot, setDot] = useState<{ x: number; y: number } | null>(null);
+  const [systemCursor, setSystemCursor] = useState(false);
   const [lang, setLang] = useState<Lang>("en");
   const t = copy[lang];
   const nextLang: Lang = lang === "en" ? "pt" : "en";
@@ -235,14 +282,17 @@ function Index() {
   }, [lang]);
 
   useEffect(() => {
-    const move = (e: PointerEvent) => e.pointerType === "mouse" && setDot({ x: e.clientX, y: e.clientY });
+    const move = (e: PointerEvent) =>
+      e.pointerType === "mouse" && setDot({ x: e.clientX, y: e.clientY });
     window.addEventListener("pointermove", move);
     return () => window.removeEventListener("pointermove", move);
   }, []);
 
   return (
     <main
-      className={`relative min-h-screen bg-background text-foreground font-mono cursor-none-fine${active !== null ? " is-reading" : ""}`}
+      className={`relative min-h-screen bg-background text-foreground font-mono cursor-none-fine${
+        active !== null ? " is-reading" : ""
+      }${systemCursor ? " is-system-cursor" : ""}`}
       onClick={(e) => {
         if (!(e.target as HTMLElement).closest("[data-hotspot],[data-panel]")) setActive(null);
       }}
@@ -255,6 +305,8 @@ function Index() {
           setLang(nextLang);
           localStorage.setItem("lang", nextLang);
         }}
+        onPointerEnter={(e) => e.pointerType === "mouse" && setSystemCursor(true)}
+        onPointerLeave={() => setSystemCursor(false)}
         aria-label={copy[nextLang].switchLabel}
         className="lang-toggle fixed top-5 right-6 z-40 border-0 bg-transparent p-0 font-mono text-base leading-none text-foreground"
       >
@@ -262,40 +314,54 @@ function Index() {
       </button>
       <div
         className="relative mx-auto pt-[8vh] w-[90vw] md:w-[66vw]"
-        onMouseLeave={() => setActive(null)}
+        onPointerLeave={(e) => e.pointerType === "mouse" && setActive(null)}
       >
         <div className="relative">
           <Scribble active={active} />
           <div className="absolute inset-0 grid grid-cols-3">
-          {t.sections.map((s, i) => (
-            <button
-              key={i}
-              data-hotspot
-              aria-label={s}
-              aria-expanded={active === i}
-              aria-controls={`panel-${i}`}
-              onMouseEnter={() => {
-                setActive(i);
-                setWipe((n) => n + 1);
-              }}
-              onFocus={() => {
-                setActive(i);
-                setWipe((n) => n + 1);
-              }}
-              onClick={() => setActive(i)}
-              className="hotspot"
-            />
-          ))}
+            {t.sections.map((s, i) => (
+              <button
+                key={i}
+                data-hotspot
+                aria-label={s}
+                aria-expanded={active === i}
+                aria-controls={`panel-${i}`}
+                onPointerEnter={(e) => {
+                  if (e.pointerType !== "mouse") return;
+                  setActive(i);
+                  setWipe((n) => n + 1);
+                }}
+                onPointerDown={(e) => {
+                  if (e.pointerType === "mouse") return;
+                  setActive(i);
+                  setWipe((n) => n + 1);
+                }}
+                onFocus={() => {
+                  setActive(i);
+                  setWipe((n) => n + 1);
+                }}
+                onClick={() => setActive(i)}
+                className="hotspot"
+              />
+            ))}
           </div>
           <p className={`click-hint${active !== null ? " is-off" : ""}`} aria-hidden="true">
-            <svg viewBox="0 0 36 28" className="click-arrow">
-              <path d="M7 24c3.2-.4 6.4-4.2 8.2-9.6 1.2-3.6 1.6-6.4 1.4-8.2" />
-              <path d="M12.2 9.4 16.8 6.2l-.2 5.6" />
+            <svg viewBox="0 0 210 42" className="click-arrows">
+              <path d="M104 39C91 29 59 22 25 8" />
+              <path d="m31 5-7 3 3 7" />
+              <path d="M105 38c-2-10-2-19 0-30" />
+              <path d="m100 13 5-6 4 7" />
+              <path d="M106 39c15-10 47-18 80-30" />
+              <path d="m181 6 6 3-3 7" />
             </svg>
             <span>{t.clickMe}</span>
           </p>
         </div>
-        <div className="relative mt-6 min-h-48" data-panel onMouseEnter={() => active !== null && setActive(active)}>
+        <div
+          className="relative mt-6 min-h-48"
+          data-panel
+          onMouseEnter={() => active !== null && setActive(active)}
+        >
           {t.sections.map((s, i) => (
             <section
               key={i}
@@ -320,8 +386,11 @@ function Index() {
         <p>© 2026 Armando Gonçalves</p>
       </footer>
 
-      {dot && active === null && (
-        <div className="cursor-dot" style={{ transform: `translate(${dot.x - 4}px, ${dot.y - 4}px)` }} />
+      {dot && active === null && !systemCursor && (
+        <div
+          className="cursor-dot"
+          style={{ transform: `translate(${dot.x - 4}px, ${dot.y - 4}px)` }}
+        />
       )}
     </main>
   );

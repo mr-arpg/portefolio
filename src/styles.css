@@ -150,74 +150,181 @@
 }
 
 @layer components {
-  .hotspot { position: relative; background: transparent; border: 0; outline: none; cursor: inherit; min-height: 4rem; }
-  .hotspot:focus-visible { outline: 1px dashed var(--foreground); outline-offset: -4px; }
+  .hotspot {
+    position: relative;
+    background: transparent;
+    border: 0;
+    outline: none;
+    cursor: inherit;
+    min-height: 4rem;
+  }
+  .hotspot:focus-visible {
+    outline: 1px dashed var(--foreground);
+    outline-offset: -4px;
+  }
   .click-hint {
     display: none;
     position: absolute;
-    left: 18%;
-    bottom: -1.35rem;
+    left: 50%;
+    bottom: -2.25rem;
     z-index: 2;
+    width: 70%;
     margin: 0;
+    transform: translateX(-50%);
     color: var(--foreground);
-    font-size: 11px;
+    font-size: 12px;
     line-height: 1;
     letter-spacing: 0.02em;
-    white-space: nowrap;
+    text-align: center;
     pointer-events: none;
     animation: hint-pulse 2.2s ease-in-out infinite;
   }
-  .click-arrow {
+  .click-arrows {
     display: block;
-    width: 28px;
-    height: 22px;
-    margin-left: 0.15rem;
-    margin-bottom: 1px;
+    width: 100%;
+    height: 34px;
+    margin: 0 auto 0.15rem;
     overflow: visible;
     fill: none;
     stroke: currentColor;
-    stroke-width: 1.25;
+    stroke-width: 1.15;
     stroke-linecap: round;
     stroke-linejoin: round;
   }
   .click-hint span {
     display: inline-block;
-    transform: rotate(14deg);
-    transform-origin: left center;
+    transform: rotate(-7deg);
+    transform-origin: center;
   }
-  .click-hint.is-off { opacity: 0; animation: none; }
-  .scribble-group { color: var(--foreground); transition: transform 350ms ease, opacity 350ms ease; transform-box: fill-box; transform-origin: center; }
-  .scribble-group.is-active { transform: scale(1.04) translateY(-4px); }
-  .scribble-group.is-active .scribble-stroke { stroke-width: calc(1px + 0.5vw); opacity: 1; }
-  .scribble-group.is-dim { opacity: 0.35; }
-  .scribble-stroke { transition: stroke-width 350ms ease; animation: jitter 6s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
-  .reveal { opacity: 0; transition: opacity 300ms ease; pointer-events: none; }
-  .reveal.is-visible { opacity: 1; pointer-events: auto; }
-  .reveal-link { text-decoration: underline; text-underline-offset: 3px; }
-  .cursor-dot { position: fixed; top: 0; left: 0; width: 8px; height: 8px; border-radius: 9999px; background: var(--foreground); pointer-events: none; z-index: 50; }
-  .lang-toggle { text-decoration: none; text-underline-offset: 3px; }
-  .lang-toggle:hover, .lang-toggle:focus-visible { text-decoration: underline; }
-  .draw-layer { position: fixed; inset: 0; z-index: 30; width: 100%; height: 100%; pointer-events: none; }
+  .click-hint.is-off {
+    opacity: 0;
+    animation: none;
+  }
+  .scribble-group {
+    color: var(--foreground);
+    transition:
+      transform 350ms ease,
+      opacity 350ms ease;
+    transform-box: fill-box;
+    transform-origin: center;
+  }
+  .scribble-group.is-active {
+    transform: scale(1.04) translateY(-4px);
+  }
+  .scribble-group.is-active .scribble-stroke {
+    stroke-width: calc(1px + 0.5vw);
+    opacity: 1;
+  }
+  .scribble-group.is-dim {
+    opacity: 0.35;
+  }
+  .scribble-stroke {
+    transition: stroke-width 350ms ease;
+    animation: jitter 6s ease-in-out infinite;
+    transform-box: fill-box;
+    transform-origin: center;
+  }
+  .reveal {
+    opacity: 0;
+    transition: opacity 300ms ease;
+    pointer-events: none;
+  }
+  .reveal.is-visible {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  .reveal-link {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  .cursor-dot {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 8px;
+    height: 8px;
+    border-radius: 9999px;
+    background: var(--foreground);
+    pointer-events: none;
+    z-index: 50;
+  }
+  .lang-toggle {
+    text-decoration: none;
+    text-underline-offset: 3px;
+  }
+  .lang-toggle:hover,
+  .lang-toggle:focus-visible {
+    text-decoration: underline;
+  }
+  .draw-layer {
+    position: fixed;
+    inset: 0;
+    z-index: 30;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+  }
   @media (pointer: fine) {
-    .cursor-none-fine, .cursor-none-fine * { cursor: none; }
-    .cursor-none-fine.is-reading, .cursor-none-fine.is-reading * { cursor: auto; }
-    .cursor-none-fine.is-reading a { cursor: pointer; }
+    .cursor-none-fine,
+    .cursor-none-fine * {
+      cursor: none;
+    }
+    .cursor-none-fine.is-reading,
+    .cursor-none-fine.is-reading * {
+      cursor: auto;
+    }
+    .cursor-none-fine.is-reading a {
+      cursor: pointer;
+    }
+    .cursor-none-fine .lang-toggle {
+      cursor: pointer;
+    }
   }
-  @media (pointer: coarse) { .cursor-dot { display: none; } }
-  @media (max-width: 767px), (pointer: coarse) { .click-hint { display: block; } }
+  @media (pointer: coarse) {
+    .cursor-dot {
+      display: none;
+    }
+  }
+  @media (max-width: 767px), (pointer: coarse) {
+    .click-hint {
+      display: block;
+    }
+  }
 }
 @keyframes jitter {
-  0%,100% { transform: translate(0,0) rotate(0deg); }
-  33% { transform: translate(1.5px,-1px) rotate(0.4deg); }
-  66% { transform: translate(-1px,1.5px) rotate(-0.3deg); }
+  0%,
+  100% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+  33% {
+    transform: translate(1.5px, -1px) rotate(0.4deg);
+  }
+  66% {
+    transform: translate(-1px, 1.5px) rotate(-0.3deg);
+  }
 }
 @keyframes hint-pulse {
-  0%, 100% { opacity: 0.72; }
-  50% { opacity: 1; }
+  0%,
+  100% {
+    opacity: 0.72;
+  }
+  50% {
+    opacity: 1;
+  }
 }
 @media (prefers-reduced-motion: reduce) {
-  .scribble-stroke, .click-hint { animation: none; }
-  .scribble-group, .reveal { transition: none; }
-  .click-hint { opacity: 0.85; }
-  .click-hint.is-off { opacity: 0; }
+  .scribble-stroke,
+  .click-hint {
+    animation: none;
+  }
+  .scribble-group,
+  .reveal {
+    transition: none;
+  }
+  .click-hint {
+    opacity: 0.85;
+  }
+  .click-hint.is-off {
+    opacity: 0;
+  }
 }
