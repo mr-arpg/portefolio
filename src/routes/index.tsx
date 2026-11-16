@@ -187,7 +187,7 @@ function Content({ i, lang }: { i: number; lang: Lang }) {
         {t.about}{" "}
         <a
           className="reveal-link"
-          href={`${import.meta.env.BASE_URL}cv.html`}
+          href={`${import.meta.env.BASE_URL}cv.pdf`}
           target="_blank"
           rel="noreferrer"
         >
