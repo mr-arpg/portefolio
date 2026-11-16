@@ -1,0 +1,12 @@
+---
+description: Publish finished portfolio changes to GitHub Pages without asking
+alwaysApply: true
+---
+
+# GitHub Pages
+
+Pushes to `main` publish https://mr-arpg.github.io/portefolio/.
+
+After a requested change to this site is done, commit it and push `main`. Do not wait to be asked, and do not stop after the local edit.
+
+Leave unrelated or unfinished work uncommitted. Do not push if the user said not to publish.

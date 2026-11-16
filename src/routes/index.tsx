@@ -20,7 +20,8 @@ const copy = {
   en: {
     sections: ["About", "Work", "Contact"],
     about:
-      "Part engineer, part musician, part wrestler. I build websites for people who'd rather be remembered than templated.",
+      "Part engineer, part musician, part wrestler (Olympic freestyle wrestling). I make websites in my spare time, maybe one day full time.",
+    cv: "My CV",
     place: "Lisbon, Portugal · Available remotely",
     code: "EN",
     switchLabel: "English",
@@ -29,7 +30,8 @@ const copy = {
   pt: {
     sections: ["Sobre", "Trabalho", "Contacto"],
     about:
-      "Parte engenheiro, parte músico, parte lutador. Faço websites para quem prefere ser lembrado a ser um template.",
+      "Parte engenheiro, parte músico, parte lutador (luta livre olímpica). Faço websites nos meus tempos livres, quem sabe um dia a tempo inteiro.",
+    cv: "O meu CV",
     place: "Lisboa, Portugal · Disponível remotamente",
     code: "PT",
     switchLabel: "Português",
@@ -39,7 +41,7 @@ const copy = {
 
 const works = [
   { title: "Associação 641", href: "https://641.pt", label: "641.pt" },
-  { title: "Eyewitness", href: "https://arpg-eyewitness.hf.space/", label: "hf.space" },
+  { title: "Eyewitness (ARTeFACTo 2026, Beja)", href: "https://arpg-eyewitness.hf.space/", label: "hf.space" },
   { title: "Sozaia", href: "https://mr-arpg.github.io/sozaia/", label: "sozaia" },
   { title: "Dvojeziko", href: "https://dvojeziko.vercel.app/", label: "dvojeziko" },
   { title: "Mixtaper Concept", href: "https://mr-arpg.github.io/mixtaper/?list=PLV9OFpCeDOvk&title=Awesome+Tuga+Vibes+For+Melina+Vol.1", label: "mixtaper" },
@@ -158,7 +160,15 @@ function ScreenDraw({ wipe }: { wipe: number }) {
 
 function Content({ i, lang }: { i: number; lang: Lang }) {
   const t = copy[lang];
-  if (i === 0) return <p>{t.about}</p>;
+  if (i === 0)
+    return (
+      <p>
+        {t.about}{" "}
+        <a className="reveal-link" href={`${import.meta.env.BASE_URL}cv.png`} target="_blank" rel="noreferrer">
+          {t.cv} →
+        </a>
+      </p>
+    );
   if (i === 1)
     return (
       <div className="space-y-1">
@@ -232,7 +242,7 @@ function Index() {
 
   return (
     <main
-      className="relative min-h-screen bg-background text-foreground font-mono cursor-none-fine"
+      className={`relative min-h-screen bg-background text-foreground font-mono cursor-none-fine${active !== null ? " is-reading" : ""}`}
       onClick={(e) => {
         if (!(e.target as HTMLElement).closest("[data-hotspot],[data-panel]")) setActive(null);
       }}
@@ -274,13 +284,16 @@ function Index() {
               }}
               onClick={() => setActive(i)}
               className="hotspot"
-            >
-              <span className={`click-hint${active === i ? " is-off" : ""}`} aria-hidden="true">
-                {t.clickMe}
-              </span>
-            </button>
+            />
           ))}
           </div>
+          <p className={`click-hint${active !== null ? " is-off" : ""}`} aria-hidden="true">
+            <svg viewBox="0 0 36 28" className="click-arrow">
+              <path d="M7 24c3.2-.4 6.4-4.2 8.2-9.6 1.2-3.6 1.6-6.4 1.4-8.2" />
+              <path d="M12.2 9.4 16.8 6.2l-.2 5.6" />
+            </svg>
+            <span>{t.clickMe}</span>
+          </p>
         </div>
         <div className="relative mt-6 min-h-48" data-panel onMouseEnter={() => active !== null && setActive(active)}>
           {t.sections.map((s, i) => (
@@ -288,12 +301,12 @@ function Index() {
               key={i}
               id={`panel-${i}`}
               aria-label={s}
-              className={`reveal absolute text-xs leading-relaxed ${
+              className={`reveal absolute text-base leading-relaxed md:text-xs ${
                 i === 0
-                  ? "left-0 max-w-sm"
+                  ? "left-0 w-full md:max-w-sm"
                   : i === 1
-                    ? "left-1/2 w-max max-w-full -translate-x-1/2"
-                    : "right-0 max-w-sm"
+                    ? "left-0 w-full md:left-1/2 md:w-max md:max-w-full md:-translate-x-1/2"
+                    : "left-0 w-full md:left-auto md:right-0 md:w-auto md:max-w-sm"
               } ${active === i ? "is-visible" : ""}`}
             >
               <Content i={i} lang={lang} />
@@ -307,7 +320,9 @@ function Index() {
         <p>© 2026 Armando Gonçalves</p>
       </footer>
 
-      {dot && <div className="cursor-dot" style={{ transform: `translate(${dot.x - 4}px, ${dot.y - 4}px)` }} />}
+      {dot && active === null && (
+        <div className="cursor-dot" style={{ transform: `translate(${dot.x - 4}px, ${dot.y - 4}px)` }} />
+      )}
     </main>
   );
 }
